@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/grad_bg"
+    tools:context=".SettingsActivity">
+
+    <Button
+        android:id="@+id/btn_profile_own"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="200dp"
+        android:height="60dp"
+        android:background="@drawable/btn_bg"
+        android:text="@string/profile_own"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textAllCaps="false"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"/>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:text="@string/btn_logOut"
+        android:textSize="25sp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:layout_below="@+id/box_notification"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btn_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="H"
+        android:textSize="50sp"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_bg"
+        android:layout_alignParentTop="true"/>
+
+    <CheckBox
+        android:id="@+id/box_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_profile_own"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/white"
+        android:text="@string/box_notification"
+        android:layout_centerInParent="true"/>
+
+
+</RelativeLayout>

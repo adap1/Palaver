@@ -1,0 +1,8 @@
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
+    <bool name="checked_login">false</bool>
+    <bool name="SkipSplash">false</bool>
+
+</resources>

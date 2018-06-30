@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Palaver</string>
+
+    <string name="view_SplashScreen_message">Welcome</string>
+
+    <string name="btn_login">Log In</string>
+    <string name="btn_logOut">Log Out</string>
+    <string name="btn_search">GO!</string>
+
+    <string name="box_remember_message">Keep me logged in</string>
+    <string name="box_notification">Push Notifications</string>
+
+    <string name="edit_search">Search for...</string>
+
+    <string name="profile_name">Name</string>
+    <string name="profile_current">Name</string>
+    <string name="profile_own">Your Profile</string>
+
+</resources>
