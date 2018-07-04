@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity{
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                prefs.edit().putBoolean("checked_login", false).apply();
                 startLogInActivity();
             }
         });

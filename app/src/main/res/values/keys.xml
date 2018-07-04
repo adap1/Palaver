@@ -4,5 +4,7 @@
 
     <bool name="checked_login">false</bool>
     <bool name="SkipSplash">false</bool>
+    <string name="Username">""</string>
+    <string name="Password">""</string>
 
 </resources>

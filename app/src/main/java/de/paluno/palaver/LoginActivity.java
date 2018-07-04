@@ -77,7 +77,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(prefs.getBoolean("checked_login", false)){
-            startHomeActivity();
+            String name = prefs.getString("Username", "");
+            String psw = prefs.getString("Password", "");
+            System.out.println("Autmomatic log in because userdata was saved");
+
+            startLogInProcess(name, psw);
+//            startHomeActivity();
         }
 
         handler.postDelayed(runnable, delay);
@@ -95,7 +100,12 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startLogInProcess();
+                EditText _name =  findViewById(R.id.username);
+                EditText _psw =  findViewById(R.id.password);
+                String name = _name.getText().toString();
+                String psw = _psw.getText().toString();
+
+                startLogInProcess(name, psw);
             }
         });
 
@@ -112,40 +122,27 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    void startLogInProcess(){
-        EditText _name =  findViewById(R.id.username);
-        EditText _psw =  findViewById(R.id.password);
-        String name = _name.getText().toString();
-        String psw = _psw.getText().toString();
-
-        //new BackgroundTasks().execute("login", name, psw);
-        new TasksBackground("LOGIN", name, psw).execute();
+    void startLogInProcess(String name, String psw){
+        saveUserData();
+        NetworkTasks nt =new NetworkTasks(this);
+        nt.execute("login", name, psw);
     }
 
-    void validateDataAndLogIn(String name, String psw){
-
-        if(validateData(name, psw)){
-            handleBox();
-            startHomeActivity();
-        }else{
-            TextView error = findViewById(R.id.view_invalid);
-            error.setText("Invalid Log In Data");
-        }
-    }
-
-    boolean validateData(final String name, final String psw){
-
-
-
-        return true;
-    }
-
-    void handleBox(){
+    void saveUserData(){
         if(checkBox.isChecked()){
+            EditText _name =  findViewById(R.id.username);
+            EditText _psw =  findViewById(R.id.password);
+            String name = _name.getText().toString();
+            String psw = _psw.getText().toString();
+
+            prefs.edit().putString("Username", name).apply();
+            prefs.edit().putString("Password", psw).apply();
             prefs.edit().putBoolean("checked_login", true).apply();
         }else{
-            prefs.edit().putBoolean("checked_login", false).apply();
+            prefs.edit().putString("Username", "").apply();
+            prefs.edit().putString("Password", "").apply();
         }
+
     }
 
 }

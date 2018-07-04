@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -77,8 +78,9 @@ public class RegisterActivity extends AppCompatActivity {
         String name = _name.getText().toString();
         String psw = _psw.getText().toString();
 
-        //new BackgroundTasks().execute("register", name, psw);
-        new TasksBackground("REGISTER", name, psw).execute();
+        NetworkTasks nt = new NetworkTasks(this);
+        nt.execute("register", name, psw);
+
     }
 
 }
