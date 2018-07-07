@@ -51,5 +51,14 @@
         android:textColor="@color/white"
         android:background="@drawable/btn_bg" />
 
+    <Button
+        android:id="@+id/btn_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_bg"
+        android:text="@string/btn_contacts"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"/>
+
 
 </RelativeLayout>

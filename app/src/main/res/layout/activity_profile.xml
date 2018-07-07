@@ -13,8 +13,9 @@
         android:id="@+id/view_profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:text="@string/profile_current"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:textSize="50sp"/>
 
@@ -22,11 +23,60 @@
         android:id="@+id/btn_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/btn_bg"
         android:text="H"
+        android:textColor="@color/white"
+        android:textSize="50sp" />
+
+    <Button
+        android:id="@+id/btn_removeContact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/btn_remove"
         android:textSize="50sp"
         android:textColor="@color/white"
+        android:background="@drawable/btn_bg"/>
+
+    <EditText
+        android:id="@+id/et_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:height="50dp"
+        android:layout_marginEnd="90dp"
+        android:background="@drawable/et_bg"
+        android:padding="10dp"/>
+
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:background="@drawable/btn_bg"
-        android:layout_alignParentTop="true"/>
+        android:text="@string/btn_send"
+        android:textColor="@color/white" />
+
+
+    <LinearLayout
+        android:id="@+id/group_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="100dp">
+
+        <ScrollView
+            android:id="@+id/group_messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        </ScrollView>
+    </LinearLayout>
+
 
 
 </RelativeLayout>

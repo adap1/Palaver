@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         String psw = _psw.getText().toString();
 
         NetworkTasks nt = new NetworkTasks(this);
-        nt.execute("register", name, psw);
+        new NetworkTasks(this).execute("register", name, psw);
 
     }
 

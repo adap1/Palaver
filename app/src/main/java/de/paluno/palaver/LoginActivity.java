@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,8 +37,6 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox checkBox;
     Handler handler = new Handler();
 
-    String url = "@http://palaver.se.paluno.uni-due.de/";
-
     Runnable runnable = new Runnable() {
 
         @Override
@@ -55,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        prefs = this.getSharedPreferences("test", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("main", MODE_PRIVATE);
 
         splash =  findViewById(R.id.splashScreen);
         rellay1 = findViewById(R.id.rellay1);
@@ -72,14 +71,16 @@ public class LoginActivity extends AppCompatActivity {
             Boolean bool2= (Boolean) b.get("SkipSplash");
             if((bool != null && bool) || (bool2 != null && bool2)) {
                 delay = 0;
-                prefs.edit().putBoolean("checked_login", false).apply();
+                if(bool) {
+                    prefs.edit().putBoolean("checked_login", false).apply();
+                }
             }
         }
 
         if(prefs.getBoolean("checked_login", false)){
             String name = prefs.getString("Username", "");
             String psw = prefs.getString("Password", "");
-            System.out.println("Autmomatic log in because userdata was saved");
+            System.out.println("Autmomatic log in because userdata was saved \nname " + name + "\npsw " + psw);
 
             startLogInProcess(name, psw);
 //            startHomeActivity();
@@ -125,22 +126,26 @@ public class LoginActivity extends AppCompatActivity {
     void startLogInProcess(String name, String psw){
         saveUserData();
         NetworkTasks nt =new NetworkTasks(this);
-        nt.execute("login", name, psw);
+        new NetworkTasks(this).execute("login", name, psw);
     }
 
-    void saveUserData(){
-        if(checkBox.isChecked()){
-            EditText _name =  findViewById(R.id.username);
-            EditText _psw =  findViewById(R.id.password);
+    void saveUserData() {
+
+            EditText _name = findViewById(R.id.username);
+            EditText _psw = findViewById(R.id.password);
             String name = _name.getText().toString();
             String psw = _psw.getText().toString();
 
-            prefs.edit().putString("Username", name).apply();
-            prefs.edit().putString("Password", psw).apply();
+            if(!name.isEmpty() && !psw.isEmpty()){
+                prefs.edit().putString("Username", name).apply();
+                prefs.edit().putString("Password", psw).apply();
+            }
+
+        if (checkBox.isChecked()) {
             prefs.edit().putBoolean("checked_login", true).apply();
+
         }else{
-            prefs.edit().putString("Username", "").apply();
-            prefs.edit().putString("Password", "").apply();
+//            prefs.edit().putBoolean("checked_login", false).apply();
         }
 
     }

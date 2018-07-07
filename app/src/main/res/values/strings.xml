@@ -6,6 +6,10 @@
     <string name="btn_login">Log In</string>
     <string name="btn_logOut">Log Out</string>
     <string name="btn_search">GO!</string>
+    <string name="btn_contacts">Contacts</string>
+    <string name="btn_send">send</string>
+    <string name="btn_remove">-</string>
+    <string name="btn_add">+</string>
 
     <string name="box_remember_message">Keep me logged in</string>
     <string name="box_notification">Push Notifications</string>
@@ -15,5 +19,7 @@
     <string name="profile_name">Name</string>
     <string name="profile_current">Name</string>
     <string name="profile_own">Your Profile</string>
+
+    <string name="Data">""</string>
 
 </resources>
