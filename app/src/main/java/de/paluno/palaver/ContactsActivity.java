@@ -33,7 +33,6 @@ public class ContactsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contacts);
 
         prefs = getSharedPreferences("", MODE_PRIVATE);
-//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         nt = new NetworkTasks(this);
 
         handleExtras();
@@ -88,10 +87,18 @@ public class ContactsActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    void startProfileActivity(String name){
-        Intent i = new Intent(ContactsActivity.this, ProfileActivity.class);
-        i.putExtra("Name", name);
-        startActivity(i);
+    void startProfileActivity(String owner){
+        getMessages(owner);
+
+//        Intent i = new Intent(ContactsActivity.this, ProfileActivity.class);
+//        i.putExtra("Name", owner);
+//        startActivity(i);
+    }
+
+    private void getMessages(String owner) {
+        String name = prefs.getString("Username", "");
+        String psw = prefs.getString("Password", "");
+        new NetworkTasks(this).execute("getMessage", name, psw, owner);
     }
 
     void addContact(String friend){

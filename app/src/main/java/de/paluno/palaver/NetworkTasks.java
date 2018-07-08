@@ -30,7 +30,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
 
     private final Context ctx;
     String answer;
-    String task;
+    String task, name, psw, target, message;
 
     public NetworkTasks(Context ctx) {
         super();
@@ -45,11 +45,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
         HttpURLConnection conn = null;
         InputStream is = null;
         OutputStream os = null;
-
-        String name = "";
-        String psw = "";
-        String target = "";
-        String message = "";
 
         try{
             task = strings[0];
@@ -168,7 +163,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        System.out.println(s);
         super.onPostExecute(s);
         answer = s;
         if (s.contains(":1")) {
@@ -210,22 +204,34 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
                 StringBuilder messages = new StringBuilder();
                 JSONObject json = toJ(s);
                 JSONArray jsonArray = getData(json);
+                List<JSONObject> msgJSON = new ArrayList<>();
                 boolean first = true;
                 for ( int i = 0; i < jsonArray.length(); i++){
                     try{
                         if(first){
                             first = false;
                         }else{
-                            messages.append("[,] ");
+                            messages.append("; ");
                         }
                         messages.append(jsonArray.get(i).toString());
+                        msgJSON.add((JSONObject)jsonArray.get(i));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+
+                String[] msgArray = new String[msgJSON.size()];
+                int count = 0;
+                for (JSONObject j : msgJSON){
+                    msgArray[count++] = j.toString();
+                }
+
                 System.out.println("messages abgerufen "+ messages.toString());
                 Intent i = new Intent(ctx, ProfileActivity.class);
-                i.putExtra("Data", messages.toString());
+                i.putExtra("DataAsString", messages.toString());
+                i.putExtra("Data", msgArray);
+                i.putExtra("Name", target);
+                i.putExtra("rawData", s);
                 ctx.startActivity(i);
             }
 

@@ -3,13 +3,16 @@ package de.paluno.palaver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -25,10 +28,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     String owner;
     Button home, send, remove;
+    LinearLayout group_Messages;
 
     NetworkTasks nt;
     SharedPreferences prefs;
     List<String> messages;
+    List<JSONObject> msgJson;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,14 +53,40 @@ public class ProfileActivity extends AppCompatActivity {
             owner = s;
         }
 
-        getMessages();
+//        getMessages();
+        handleExtras();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                handleExtras();
+        group_Messages = findViewById(R.id.group_messages);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+        for (JSONObject j : msgJson){
+            try{
+                final String sender = j.getString("Sender");
+                final String msg = j.getString("Data");
+                final String time = j.getString("DateTime");
+                TextView tv = new TextView(this);
+                params.setMargins(0, 15, 0, 0);
+                if(sender.equals(prefs.getString("Username", ""))){
+//                    params.setMarginEnd(50);
+                    params.setMargins(350, 15, 10, 0);
+                }else{
+//                    params.setMarginStart(50);
+                    params.setMargins(10, 15, 350, 0);
+                }
+                tv.setLayoutParams(params);
+                tv.setText(msg);
+                tv.setTextColor(Color.WHITE);
+
+                group_Messages.addView(tv);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }, 2000);
+
+        }
 
         home = findViewById(R.id.btn_home);
         home.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +132,10 @@ public class ProfileActivity extends AppCompatActivity {
         EditText _message = findViewById(R.id.et_message);
         String message = _message.getText().toString();
 
+        System.out.println("Username= " + name);
+        System.out.println("Password= " + psw);
+        System.out.println("Recipient= " + owner);
+
         if(!message.isEmpty()){
             new NetworkTasks(this).execute("sendMessage", name, psw, owner, message);
         }
@@ -114,30 +149,73 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void handleExtras() {
-        System.out.println("handle extras messages");
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
         if(b != null){
-            String s = (String) b.get("Data");
+//            String[] msg = (String[]) b.get("Data");
+            String s = (String) b.get("rawData");
             String originalS = s;
             if(s != null && !s.isEmpty()) {
-                messages = new ArrayList<>();
 
-                while (s.contains(",")) {
-                    int comma = s.indexOf(",");
-                    String temp = s.substring(0, comma);
-                    messages.add(temp);
-                    s = s.substring(comma+2);
-                }
-                if(!s.contains(",") && !s.isEmpty()){
-                    messages.add(s);
+//                messages = new ArrayList<>();
+//
+//                while (s.contains(",")) {
+//                    int comma = s.indexOf(",");
+//                    String temp = s.substring(0, comma);
+//                    messages.add(temp);
+//                    s = s.substring(comma+2);
+//                }
+//                if(!s.contains(",") && !s.isEmpty()){
+//                    messages.add(s);
+//                }
+
+                JSONObject json = toJ(s);
+                JSONArray jsonArray = getData(json);
+                msgJson = new ArrayList<>();
+                for ( int i = 0; i < jsonArray.length(); i++){
+                    try{
+                        msgJson.add((JSONObject)jsonArray.get(i));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                System.out.println("original String of messages "+ originalS);
-                System.out.println("List of messages "+ messages.toString());
+                for (JSONObject j : msgJson){
+                    toString(j);
+                }
             }
         }
+    }
+
+    void toString(JSONObject json) {
+        System.out.println("\nJSONObject to String\n.");
+        try {
+            System.out.println("\nSender " + json.get("Sender"));
+            System.out.println("\nRecipient " + json.get("Recipient"));
+            System.out.println("\nData " + json.get("Data"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    JSONObject toJ(String s) {
+        try {
+            return new JSONObject(s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    JSONArray getData(JSONObject json) {
+        try {
+            json.get("Data").toString();
+            return json.getJSONArray("Data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
