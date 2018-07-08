@@ -53,7 +53,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
             target = strings[3];
             message = strings[4];
         }catch (IndexOutOfBoundsException e){
-            e.printStackTrace();
+
         }
 
         try {
@@ -83,7 +83,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
 
             } else if (task.equals("addFriend")) {
 
-                System.out.println("in networktask addFriends");
                 URL url = new URL(mainUrl + "/api/friends/add");
                 conn = setupConnection("GET", url);
 
@@ -175,6 +174,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
                 ctx.startActivity(i);
             } else if (task.equals("addFriend")) {
                 System.out.println("postExecute addFriend " + getData(toJ(s)));
+                System.out.println(s);
             } else if (task.equals("getFriends")) {
                 StringBuilder names = new StringBuilder();
                 JSONObject json = toJ(s);

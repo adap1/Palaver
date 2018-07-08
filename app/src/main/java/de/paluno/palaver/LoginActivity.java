@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             Boolean bool2= (Boolean) b.get("SkipSplash");
             if((bool != null && bool) || (bool2 != null && bool2)) {
                 delay = 0;
-                if(bool) {
+                if((bool != null && bool)) {
                     prefs.edit().putBoolean("checked_login", false).apply();
                 }
             }
@@ -125,7 +125,6 @@ public class LoginActivity extends AppCompatActivity {
 
     void startLogInProcess(String name, String psw){
         saveUserData();
-        NetworkTasks nt =new NetworkTasks(this);
         new NetworkTasks(this).execute("login", name, psw);
     }
 

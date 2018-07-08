@@ -74,15 +74,17 @@ public class HomeActivity extends AppCompatActivity {
         System.out.println("name " + name +"\npsw " + psw);
         new NetworkTasks(this).execute("getFriends", name, psw);
 
-//        Intent i = new Intent(HomeActivity.this, ContactsActivity.class);
-//        startActivity(i);
     }
 
     void openProfileWithSearch(){
-        String name = searchBox.getText().toString();
+        String owner = searchBox.getText().toString();
 
-        Intent i = new Intent(HomeActivity.this, ProfileActivity.class);
-        i.putExtra("Name", name);
-        startActivity(i);
+        getMessages(owner);
+    }
+
+    private void getMessages(String owner) {
+        String name = prefs.getString("Username", "");
+        String psw = prefs.getString("Password", "");
+        new NetworkTasks(this).execute("getMessage", name, psw, owner);
     }
 }

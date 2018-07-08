@@ -57,24 +57,29 @@ public class ProfileActivity extends AppCompatActivity {
         handleExtras();
 
         group_Messages = findViewById(R.id.group_messages);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
+
 
         for (JSONObject j : msgJson){
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
             try{
-                final String sender = j.getString("Sender");
-                final String msg = j.getString("Data");
-                final String time = j.getString("DateTime");
+                String sender = j.getString("Sender");
+                String msg = j.getString("Data");
+                String time = j.getString("DateTime");
                 TextView tv = new TextView(this);
                 params.setMargins(0, 15, 0, 0);
                 if(sender.equals(prefs.getString("Username", ""))){
-//                    params.setMarginEnd(50);
-                    params.setMargins(350, 15, 10, 0);
+//                    params.setMarginEnd(150);
+//                    params.setMargins(350, 15, 10, 0);
+                    params.setMarginStart(500);
+                    System.out.println("Ist vom Sender " + msg);
                 }else{
-//                    params.setMarginStart(50);
-                    params.setMargins(10, 15, 350, 0);
+//                    params.setMarginStart(150);
+//                    params.setMargins(10, 15, 350, 0);
+                    params.setMarginStart(150);
+                    System.out.println("Ist vom anderen " + msg);
                 }
                 tv.setLayoutParams(params);
                 tv.setText(msg);

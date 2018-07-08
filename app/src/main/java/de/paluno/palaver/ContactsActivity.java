@@ -43,23 +43,24 @@ public class ContactsActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
-        for(String n : names){
-            final String name = n;
-            Button b = new Button(this);
-            params.setMargins(0, 15, 0, 0);
-            b.setLayoutParams(params);
-            b.setText(name);
-            b.setTextColor(Color.WHITE);
+        if(names != null){
+            for(String n : names){
+                final String name = n;
+                Button b = new Button(this);
+                params.setMargins(0, 15, 0, 0);
+                b.setLayoutParams(params);
+                b.setText(name);
+                b.setTextColor(Color.WHITE);
 
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startProfileActivity(name);
-                }
-            });
-            group_Buttons.addView(b);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startProfileActivity(name);
+                    }
+                });
+                group_Buttons.addView(b);
+            }
         }
-
 
         home = findViewById(R.id.btn_home);
         home.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +76,7 @@ public class ContactsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText _name = findViewById(R.id.et_addName);
                 String name = _name.getText().toString();
+                System.out.println("name to add " + name);
 
                 addContact(name);
             }
@@ -114,11 +116,10 @@ public class ContactsActivity extends AppCompatActivity {
 
         if(b != null){
             String s = (String) b.get("Data");
-            String originalS = s;
             if(s != null && !s.isEmpty()) {
                 names = new ArrayList<>();
 
-                while (s.indexOf(",") != -1) {
+                while (s.contains(",")) {
                     int comma = s.indexOf(",");
                     String temp = s.substring(0, comma);
                     names.add(temp);
