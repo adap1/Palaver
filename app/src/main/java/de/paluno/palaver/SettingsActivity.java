@@ -8,18 +8,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 public class SettingsActivity extends AppCompatActivity{
 
     Button logout, home, myProfile;
+    CheckBox push;
 
     SharedPreferences prefs;
+    Context ctx;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        prefs = this.getSharedPreferences("checked_login", Context.MODE_PRIVATE);
+        prefs = this.getSharedPreferences("main", Context.MODE_PRIVATE);
 
         logout = findViewById(R.id.btn_logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -39,10 +47,32 @@ public class SettingsActivity extends AppCompatActivity{
         });
 
         myProfile = findViewById(R.id.btn_profile_own);
-        myProfile.setOnClickListener(new View.OnClickListener() {
+//        myProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startProfileActivity();
+//            }
+//        });
+
+        push = findViewById(R.id.box_notification);
+
+        if (prefs.getBoolean("checked_push", false)){
+            push.setChecked(true);
+        }else{
+            push.setChecked(false);
+        }
+
+        push.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                startProfileActivity();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            if (isChecked) {
+                prefs.edit().putBoolean("checked_push", true).apply();
+                getToken();
+            } else {
+                prefs.edit().putBoolean("checked_push", false).apply();
+            }
+
             }
         });
     }
@@ -62,6 +92,27 @@ public class SettingsActivity extends AppCompatActivity{
         Intent i = new Intent(SettingsActivity.this, ProfileActivity.class);
         i.putExtra("Name", "My own profile");
         startActivity(i);
+    }
+
+    void getToken(){
+
+        ctx = this;
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( SettingsActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String name = prefs.getString("Username", "");
+                String psw = prefs.getString("Password", "");
+
+                String token = instanceIdResult.getToken();
+                Log.e("newToken",token);
+
+                prefs.edit().putString("Token", token).apply();
+
+                new NetworkTasks(ctx).execute("pushtoken", name, psw, "", "", token);
+            }
+        });
+
+
     }
 
 }

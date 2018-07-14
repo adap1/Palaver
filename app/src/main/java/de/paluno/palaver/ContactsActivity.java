@@ -32,7 +32,7 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        prefs = getSharedPreferences("", MODE_PRIVATE);
+        prefs = getSharedPreferences("main", MODE_PRIVATE);
         nt = new NetworkTasks(this);
 
         handleExtras();
@@ -90,11 +90,9 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     void startProfileActivity(String owner){
-        getMessages(owner);
+        System.out.println("Pressed Button of " + owner);
 
-//        Intent i = new Intent(ContactsActivity.this, ProfileActivity.class);
-//        i.putExtra("Name", owner);
-//        startActivity(i);
+        getMessages(owner);
     }
 
     private void getMessages(String owner) {

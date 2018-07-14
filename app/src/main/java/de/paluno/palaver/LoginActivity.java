@@ -114,6 +114,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void startHomeActivity(){
+        System.out.println("Going to Home with\n" + prefs.getString("Username", "") + "\n" + prefs.getString("Password", ""));
+
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(i);
     }
@@ -125,6 +127,8 @@ public class LoginActivity extends AppCompatActivity {
 
     void startLogInProcess(String name, String psw){
         saveUserData();
+
+        System.out.println("Going to Home with\n" + prefs.getString("Username", "") + "\n" + prefs.getString("Password", ""));
         new NetworkTasks(this).execute("login", name, psw);
     }
 

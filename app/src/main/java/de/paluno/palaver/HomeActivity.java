@@ -1,5 +1,6 @@
 package de.paluno.palaver;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,9 +26,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         nt = new NetworkTasks(this);
-//        prefs = getPreferences(MODE_PRIVATE);
         prefs = getSharedPreferences("main", MODE_PRIVATE);
-//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         settings = findViewById(R.id.btn_settings);
         settings.setOnClickListener(new View.OnClickListener() {
@@ -87,4 +86,5 @@ public class HomeActivity extends AppCompatActivity {
         String psw = prefs.getString("Password", "");
         new NetworkTasks(this).execute("getMessage", name, psw, owner);
     }
+
 }

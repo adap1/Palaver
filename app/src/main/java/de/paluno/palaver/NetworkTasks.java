@@ -7,6 +7,10 @@ import android.os.AsyncTask;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +34,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
 
     private final Context ctx;
     String answer;
-    String task, name, psw, target, message;
+    String task, name, psw, target, message, token;
 
     public NetworkTasks(Context ctx) {
         super();
@@ -52,6 +56,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
             psw = strings[2];
             target = strings[3];
             message = strings[4];
+            token = strings[5];
         }catch (IndexOutOfBoundsException e){
 
         }
@@ -146,6 +151,20 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
 
                 writeToStream(getMessage, conn);
                 return InputStreamToString(conn);
+
+            } else if(task.equals("pushtoken")){
+
+                URL url = new URL(mainUrl + "/api/user/pushtoken");
+                conn = setupConnection("GET", url);
+
+                JSONObject pushtoken = new JSONObject();
+                pushtoken.put("Username", name);
+                pushtoken.put("Password", psw);
+                pushtoken.put("PushToken", token);
+
+                writeToStream(pushtoken, conn);
+                return InputStreamToString(conn);
+
             }
 
         } catch (IOException e) {
@@ -163,6 +182,10 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+
+        //TODO remove after app finished
+        Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
+
         answer = s;
         if (s.contains(":1")) {
             answer = "success";
@@ -173,8 +196,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
                 Intent i = new Intent(ctx, HomeActivity.class);
                 ctx.startActivity(i);
             } else if (task.equals("addFriend")) {
-                System.out.println("postExecute addFriend " + getData(toJ(s)));
-                System.out.println(s);
             } else if (task.equals("getFriends")) {
                 StringBuilder names = new StringBuilder();
                 JSONObject json = toJ(s);
@@ -192,7 +213,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
                         e.printStackTrace();
                     }
                 }
-                System.out.println("Friends = " + names);
                 Intent i = new Intent(ctx, ContactsActivity.class);
                 i.putExtra("Data", names.toString());
                 ctx.startActivity(i);
@@ -226,17 +246,19 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
                     msgArray[count++] = j.toString();
                 }
 
-                System.out.println("messages abgerufen "+ messages.toString());
                 Intent i = new Intent(ctx, ProfileActivity.class);
                 i.putExtra("DataAsString", messages.toString());
                 i.putExtra("Data", msgArray);
                 i.putExtra("Name", target);
                 i.putExtra("rawData", s);
                 ctx.startActivity(i);
+            } else if(task.equals("pushtoken")){
+                Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
             }
 
         }else if(s.contains(":0")){
             answer = "failure";
+            Toast.makeText(ctx, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -330,4 +352,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
     String getResponse() {
         return answer;
     }
+
+
 }

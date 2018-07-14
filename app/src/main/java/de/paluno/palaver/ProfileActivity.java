@@ -30,9 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button home, send, remove;
     LinearLayout group_Messages;
 
-    NetworkTasks nt;
     SharedPreferences prefs;
-    List<String> messages;
     List<JSONObject> msgJson;
 
     @Override
@@ -40,7 +38,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        nt = new NetworkTasks(this);
         prefs = getSharedPreferences("main", MODE_PRIVATE);
 
         Intent i = getIntent();
@@ -53,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
             owner = s;
         }
 
-//        getMessages();
         handleExtras();
 
         group_Messages = findViewById(R.id.group_messages);
@@ -71,15 +67,9 @@ public class ProfileActivity extends AppCompatActivity {
                 TextView tv = new TextView(this);
                 params.setMargins(0, 15, 0, 0);
                 if(sender.equals(prefs.getString("Username", ""))){
-//                    params.setMarginEnd(150);
-//                    params.setMargins(350, 15, 10, 0);
                     params.setMarginStart(500);
-                    System.out.println("Ist vom Sender " + msg);
                 }else{
-//                    params.setMarginStart(150);
-//                    params.setMargins(10, 15, 350, 0);
                     params.setMarginStart(150);
-                    System.out.println("Ist vom anderen " + msg);
                 }
                 tv.setLayoutParams(params);
                 tv.setText(msg);
@@ -106,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendMessage();
-
+                getMessages();
             }
         });
 
