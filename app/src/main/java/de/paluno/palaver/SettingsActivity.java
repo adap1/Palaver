@@ -50,9 +50,9 @@ public class SettingsActivity extends AppCompatActivity{
 //        myProfile.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                startProfileActivity();
 //            }
 //        });
+        myProfile.setText(prefs.getString("Username", ""));
 
         push = findViewById(R.id.box_notification);
 
@@ -71,6 +71,7 @@ public class SettingsActivity extends AppCompatActivity{
                 getToken();
             } else {
                 prefs.edit().putBoolean("checked_push", false).apply();
+                deleteToken();
             }
 
             }
@@ -104,15 +105,18 @@ public class SettingsActivity extends AppCompatActivity{
                 String psw = prefs.getString("Password", "");
 
                 String token = instanceIdResult.getToken();
-                Log.e("newToken",token);
-
                 prefs.edit().putString("Token", token).apply();
 
                 new NetworkTasks(ctx).execute("pushtoken", name, psw, "", "", token);
+
             }
         });
 
+    }
+
+    void deleteToken(){
 
     }
+
 
 }

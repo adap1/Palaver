@@ -76,7 +76,6 @@ public class ContactsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText _name = findViewById(R.id.et_addName);
                 String name = _name.getText().toString();
-                System.out.println("name to add " + name);
 
                 addContact(name);
             }
@@ -90,7 +89,6 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     void startProfileActivity(String owner){
-        System.out.println("Pressed Button of " + owner);
 
         getMessages(owner);
     }
@@ -127,8 +125,6 @@ public class ContactsActivity extends AppCompatActivity {
                     names.add(s);
                 }
 
-//                System.out.println("String of names "+ originalS);
-//                System.out.println("List of names "+ names.toString());
             }
         }
     }

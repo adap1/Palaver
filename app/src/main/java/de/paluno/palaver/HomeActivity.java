@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +26,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        nt = new NetworkTasks(this);
         prefs = getSharedPreferences("main", MODE_PRIVATE);
+
+        String name = prefs.getString("Username", "");
+        Log.e("."+name+"'s Token", prefs.getString("Token", ""));
 
         settings = findViewById(R.id.btn_settings);
         settings.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +73,6 @@ public class HomeActivity extends AppCompatActivity {
     void startContactsActivity(){
         String name = prefs.getString("Username", "");
         String psw = prefs.getString("Password", "");
-        System.out.println("name " + name +"\npsw " + psw);
         new NetworkTasks(this).execute("getFriends", name, psw);
 
     }

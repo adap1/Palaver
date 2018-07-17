@@ -80,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
         if(prefs.getBoolean("checked_login", false)){
             String name = prefs.getString("Username", "");
             String psw = prefs.getString("Password", "");
-            System.out.println("Autmomatic log in because userdata was saved \nname " + name + "\npsw " + psw);
 
             startLogInProcess(name, psw);
 //            startHomeActivity();
@@ -114,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void startHomeActivity(){
-        System.out.println("Going to Home with\n" + prefs.getString("Username", "") + "\n" + prefs.getString("Password", ""));
 
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(i);
@@ -128,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
     void startLogInProcess(String name, String psw){
         saveUserData();
 
-        System.out.println("Going to Home with\n" + prefs.getString("Username", "") + "\n" + prefs.getString("Password", ""));
         new NetworkTasks(this).execute("login", name, psw);
     }
 

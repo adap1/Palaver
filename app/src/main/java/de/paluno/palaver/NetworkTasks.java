@@ -1,20 +1,14 @@
 package de.paluno.palaver;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.widget.CheckBox;
+import android.util.Log;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,21 +16,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
-
 public class NetworkTasks extends AsyncTask<String, Void, String> {
 
+    @SuppressLint("StaticFieldLeak")
     private final Context ctx;
-    String answer;
-    String task, name, psw, target, message, token;
+    private String task, name, psw, target, message, token;
 
-    public NetworkTasks(Context ctx) {
+    NetworkTasks(Context ctx) {
         super();
         this.ctx = ctx;
 
@@ -47,8 +37,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
 
         String mainUrl = "http://palaver.se.paluno.uni-due.de";
         HttpURLConnection conn = null;
-        InputStream is = null;
-        OutputStream os = null;
 
         try{
             task = strings[0];
@@ -57,119 +45,126 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
             target = strings[3];
             message = strings[4];
             token = strings[5];
-        }catch (IndexOutOfBoundsException e){
+        }catch (IndexOutOfBoundsException ignored){
 
         }
 
         try {
-            if (task.equals("register")) {
+            switch (task) {
+                case "register": {
 
-                URL url = new URL(mainUrl + "/api/user/register/");
-                conn = setupConnection("POST", url);
+                    URL url = new URL(mainUrl + "/api/user/register/");
+                    conn = setupConnection("POST", url);
 
-                JSONObject post = new JSONObject();
-                post.put("Username", name);
-                post.put("Password", psw);
+                    JSONObject post = new JSONObject();
+                    post.put("Username", name);
+                    post.put("Password", psw);
 
-                writeToStream(post, conn);
-                return InputStreamToString(conn);
+                    writeToStream(post, conn);
+                    return InputStreamToString(conn);
 
-            } else if (task.equals("login")) {
+                }
+                case "login": {
 
-                URL url = new URL(mainUrl + "/api/user/validate/");
-                conn = setupConnection("GET", url);
+                    URL url = new URL(mainUrl + "/api/user/validate/");
+                    conn = setupConnection("GET", url);
 
-                JSONObject validation = new JSONObject();
-                validation.put("Username", name);
-                validation.put("Password", psw);
+                    JSONObject validation = new JSONObject();
+                    validation.put("Username", name);
+                    validation.put("Password", psw);
 
-                writeToStream(validation, conn);
-                return InputStreamToString(conn);
+                    writeToStream(validation, conn);
+                    return InputStreamToString(conn);
 
-            } else if (task.equals("addFriend")) {
+                }
+                case "addFriend": {
 
-                URL url = new URL(mainUrl + "/api/friends/add");
-                conn = setupConnection("GET", url);
+                    URL url = new URL(mainUrl + "/api/friends/add");
+                    conn = setupConnection("GET", url);
 
-                JSONObject addFriend = new JSONObject();
-                addFriend.put("Username", name);
-                addFriend.put("Password", psw);
-                addFriend.put("Friend", target);
+                    JSONObject addFriend = new JSONObject();
+                    addFriend.put("Username", name);
+                    addFriend.put("Password", psw);
+                    addFriend.put("Friend", target);
 
-                writeToStream(addFriend, conn);
-                return InputStreamToString(conn);
+                    writeToStream(addFriend, conn);
+                    return InputStreamToString(conn);
 
-            } else if (task.equals("getFriends")) {
+                }
+                case "getFriends": {
 
-                URL url = new URL(mainUrl + "/api/friends/get");
-                conn = setupConnection("GET", url);
+                    URL url = new URL(mainUrl + "/api/friends/get");
+                    conn = setupConnection("GET", url);
 
-                JSONObject getFriends = new JSONObject();
-                getFriends.put("Username", name);
-                getFriends.put("Password", psw);
+                    JSONObject getFriends = new JSONObject();
+                    getFriends.put("Username", name);
+                    getFriends.put("Password", psw);
 
-                writeToStream(getFriends, conn);
-                return InputStreamToString(conn);
+                    writeToStream(getFriends, conn);
+                    return InputStreamToString(conn);
 
-            } else if( task.equals("sendMessage")){
+                }
+                case "sendMessage": {
 
-                URL url = new URL(mainUrl + "/api/message/send");
-                conn = setupConnection("POST", url);
+                    URL url = new URL(mainUrl + "/api/message/send");
+                    conn = setupConnection("POST", url);
 
-                JSONObject sendMessage = new JSONObject();
-                sendMessage.put("Username", name);
-                sendMessage.put("Password", psw);
-                sendMessage.put("Recipient", target);
-                sendMessage.put("Mimetype", "text/plain");
-                sendMessage.put("Data", message);
+                    JSONObject sendMessage = new JSONObject();
+                    sendMessage.put("Username", name);
+                    sendMessage.put("Password", psw);
+                    sendMessage.put("Recipient", target);
+                    sendMessage.put("Mimetype", "text/plain");
+                    sendMessage.put("Data", message);
 
-                writeToStream(sendMessage, conn);
-                return InputStreamToString(conn);
+                    writeToStream(sendMessage, conn);
+                    return InputStreamToString(conn);
 
-            } else if(task.equals("removeContact")) {
+                }
+                case "removeContact": {
 
-                URL url = new URL(mainUrl + "/api/friends/remove");
-                conn = setupConnection("POST", url);
+                    URL url = new URL(mainUrl + "/api/friends/remove");
+                    conn = setupConnection("POST", url);
 
-                JSONObject removeContact = new JSONObject();
-                removeContact.put("Username", name);
-                removeContact.put("Password", psw);
-                removeContact.put("Friend", target);
+                    JSONObject removeContact = new JSONObject();
+                    removeContact.put("Username", name);
+                    removeContact.put("Password", psw);
+                    removeContact.put("Friend", target);
 
-                writeToStream(removeContact, conn);
-                return InputStreamToString(conn);
+                    writeToStream(removeContact, conn);
+                    return InputStreamToString(conn);
 
-            } else if(task.equals("getMessage")){
+                }
+                case "getMessage": {
 
-                URL url = new URL(mainUrl + "/api/message/get");
-                conn = setupConnection("GET", url);
+                    URL url = new URL(mainUrl + "/api/message/get");
+                    conn = setupConnection("GET", url);
 
-                JSONObject getMessage = new JSONObject();
-                getMessage.put("Username", name);
-                getMessage.put("Password", psw);
-                getMessage.put("Recipient", target);
+                    JSONObject getMessage = new JSONObject();
+                    getMessage.put("Username", name);
+                    getMessage.put("Password", psw);
+                    getMessage.put("Recipient", target);
 
-                writeToStream(getMessage, conn);
-                return InputStreamToString(conn);
+                    writeToStream(getMessage, conn);
+                    return InputStreamToString(conn);
 
-            } else if(task.equals("pushtoken")){
+                }
+                case "pushtoken": {
 
-                URL url = new URL(mainUrl + "/api/user/pushtoken");
-                conn = setupConnection("GET", url);
+                    URL url = new URL(mainUrl + "/api/user/pushtoken");
+                    conn = setupConnection("GET", url);
 
-                JSONObject pushtoken = new JSONObject();
-                pushtoken.put("Username", name);
-                pushtoken.put("Password", psw);
-                pushtoken.put("PushToken", token);
+                    JSONObject pushtoken = new JSONObject();
+                    pushtoken.put("Username", name);
+                    pushtoken.put("Password", psw);
+                    pushtoken.put("PushToken", token);
 
-                writeToStream(pushtoken, conn);
-                return InputStreamToString(conn);
+                    writeToStream(pushtoken, conn);
+                    return InputStreamToString(conn);
+                }
 
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         } finally {
             if (conn != null)
@@ -186,83 +181,98 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
         //TODO remove after app finished
         Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
 
-        answer = s;
         if (s.contains(":1")) {
-            answer = "success";
-            if (task.equals("register")) {
-                Intent i = new Intent(ctx, LoginActivity.class);
-                ctx.startActivity(i);
-            } else if (task.equals("login")) {
-                Intent i = new Intent(ctx, HomeActivity.class);
-                ctx.startActivity(i);
-            } else if (task.equals("addFriend")) {
-            } else if (task.equals("getFriends")) {
-                StringBuilder names = new StringBuilder();
-                JSONObject json = toJ(s);
-                JSONArray jsonArray = getData(json);
-                boolean first = true;
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        if (first){
-                            first = false;
-                        }else{
-                            names.append(", ");
+            switch (task) {
+                case "register": {
+                    Intent i = new Intent(ctx, LoginActivity.class);
+                    ctx.startActivity(i);
+                    break;
+                }
+                case "login": {
+                    Intent i = new Intent(ctx, HomeActivity.class);
+                    ctx.startActivity(i);
+                    break;
+                }
+                case "addFriend":
+                    break;
+                case "getFriends": {
+                    StringBuilder names = new StringBuilder();
+                    JSONObject json = toJ(s);
+                    assert json != null;
+                    JSONArray jsonArray = getData(json);
+                    boolean first = true;
+                    assert jsonArray != null;
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            if (first) {
+                                first = false;
+                            } else {
+                                names.append(", ");
+                            }
+                            names.append(jsonArray.get(i).toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        names.append(jsonArray.get(i).toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
+                    Intent i = new Intent(ctx, ContactsActivity.class);
+                    i.putExtra("Data", names.toString());
+                    ctx.startActivity(i);
+                    break;
                 }
-                Intent i = new Intent(ctx, ContactsActivity.class);
-                i.putExtra("Data", names.toString());
-                ctx.startActivity(i);
-            } else if(task.equals("sendMessage")){
+                case "sendMessage":
+                    Toast.makeText(ctx, s, Toast.LENGTH_SHORT);
+                    break;
+                case "removeContact":
 
-            } else if(task.equals("removeContact")){
-
-            } else if(task.equals("getMessage")){
-                StringBuilder messages = new StringBuilder();
-                JSONObject json = toJ(s);
-                JSONArray jsonArray = getData(json);
-                List<JSONObject> msgJSON = new ArrayList<>();
-                boolean first = true;
-                for ( int i = 0; i < jsonArray.length(); i++){
-                    try{
-                        if(first){
-                            first = false;
-                        }else{
-                            messages.append("; ");
+                    Toast.makeText(ctx, s, Toast.LENGTH_SHORT);
+                    break;
+                case "getMessage": {
+                    StringBuilder messages = new StringBuilder();
+                    JSONObject json = toJ(s);
+                    assert json != null;
+                    JSONArray jsonArray = getData(json);
+                    List<JSONObject> msgJSON = new ArrayList<>();
+                    boolean first = true;
+                    assert jsonArray != null;
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            if (first) {
+                                first = false;
+                            } else {
+                                messages.append("; ");
+                            }
+                            messages.append(jsonArray.get(i).toString());
+                            msgJSON.add((JSONObject) jsonArray.get(i));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        messages.append(jsonArray.get(i).toString());
-                        msgJSON.add((JSONObject)jsonArray.get(i));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                }
 
-                String[] msgArray = new String[msgJSON.size()];
-                int count = 0;
-                for (JSONObject j : msgJSON){
-                    msgArray[count++] = j.toString();
-                }
+                    String[] msgArray = new String[msgJSON.size()];
+                    int count = 0;
+                    for (JSONObject j : msgJSON) {
+                        msgArray[count++] = j.toString();
+                    }
 
-                Intent i = new Intent(ctx, ProfileActivity.class);
-                i.putExtra("DataAsString", messages.toString());
-                i.putExtra("Data", msgArray);
-                i.putExtra("Name", target);
-                i.putExtra("rawData", s);
-                ctx.startActivity(i);
-            } else if(task.equals("pushtoken")){
-                Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(ctx, ProfileActivity.class);
+                    i.putExtra("DataAsString", messages.toString());
+                    i.putExtra("Data", msgArray);
+                    i.putExtra("Name", target);
+                    i.putExtra("rawData", s);
+                    ctx.startActivity(i);
+                    break;
+                }
+                case "pushtoken":
+                    Toast.makeText(ctx, s, Toast.LENGTH_LONG).show();
+                    break;
             }
 
         }else if(s.contains(":0")){
-            answer = "failure";
             Toast.makeText(ctx, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
     }
 
-    JSONObject toJ(String s) {
+    private JSONObject toJ(String s) {
         s.replace("{", "");
         s.replace("}", "");
         s.replace("[", "");
@@ -276,18 +286,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
         return null;
     }
 
-    String getData(String s) {
-        int start = s.indexOf("[") + 2;
-        int end = s.indexOf("]") - 2;
-
-        if (start != -1) {
-            return s.substring(start, end);
-        } else {
-            return "";
-        }
-    }
-
-    JSONArray getData(JSONObject json) {
+    private JSONArray getData(JSONObject json) {
         try {
             json.get("Data").toString();
             return json.getJSONArray("Data");
@@ -297,13 +296,13 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
         return null;
     }
 
-    String InputStreamToString(HttpURLConnection conn) {
+    private String InputStreamToString(HttpURLConnection conn) {
         StringBuilder reply = new StringBuilder();
         try {
             InputStream is = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String line = "";
+            String line;
             StringBuilder response = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 response.append(line);
@@ -317,7 +316,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
         return reply.toString();
     }
 
-    HttpURLConnection setupConnection(String connectionType, URL url) {
+    private HttpURLConnection setupConnection(String connectionType, URL url) {
         HttpURLConnection conn = null;
         try {
             conn = (HttpURLConnection) url.openConnection();
@@ -329,8 +328,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.connect();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -338,7 +335,7 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
         return conn;
     }
 
-    void writeToStream(JSONObject json, HttpURLConnection conn) {
+    private void writeToStream(JSONObject json, HttpURLConnection conn) {
         try {
             OutputStream os = conn.getOutputStream();
             OutputStreamWriter writer = new OutputStreamWriter(os);
@@ -347,10 +344,6 @@ public class NetworkTasks extends AsyncTask<String, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    String getResponse() {
-        return answer;
     }
 
 

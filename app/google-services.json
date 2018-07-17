@@ -15,16 +15,21 @@
       },
       "oauth_client": [
         {
+          "client_id": "550996555334-6i8htda5h4cit2hog8k1i7807ims27b0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.paluno.palaver",
+            "certificate_hash": "bcb5839f0e29eec8e149a4b87130b7a298666b09"
+          }
+        },
+        {
           "client_id": "550996555334-8q8jn5ncvujeec6bv8k48qu49bo2qs1g.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          //key aus 'this'
           "current_key": "AIzaSyB7zkjJjJLX6dtkMevQVPLHdGv6ZvIOPyY"
-          //"Web API Key"
-//          "current_key": "AIzaSyAUppXpr07aXicckeiA9Eu4P424YVS9a9w"
         }
       ],
       "services": {
@@ -32,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550996555334-8q8jn5ncvujeec6bv8k48qu49bo2qs1g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

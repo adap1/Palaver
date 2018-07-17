@@ -1,11 +1,9 @@
 package de.paluno.palaver;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,11 +16,9 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -67,9 +63,9 @@ public class ProfileActivity extends AppCompatActivity {
                 TextView tv = new TextView(this);
                 params.setMargins(0, 15, 0, 0);
                 if(sender.equals(prefs.getString("Username", ""))){
-                    params.setMarginStart(500);
+                    params.setMarginStart(400);
                 }else{
-                    params.setMarginStart(150);
+                    params.setMarginStart(50);
                 }
                 tv.setLayoutParams(params);
                 tv.setText(msg);
@@ -127,10 +123,6 @@ public class ProfileActivity extends AppCompatActivity {
         EditText _message = findViewById(R.id.et_message);
         String message = _message.getText().toString();
 
-        System.out.println("Username= " + name);
-        System.out.println("Password= " + psw);
-        System.out.println("Recipient= " + owner);
-
         if(!message.isEmpty()){
             new NetworkTasks(this).execute("sendMessage", name, psw, owner, message);
         }
@@ -165,7 +157,7 @@ public class ProfileActivity extends AppCompatActivity {
 //                    messages.add(s);
 //                }
 
-                JSONObject json = toJ(s);
+                JSONObject json = toJson(s);
                 JSONArray jsonArray = getData(json);
                 msgJson = new ArrayList<>();
                 for ( int i = 0; i < jsonArray.length(); i++){
@@ -175,26 +167,11 @@ public class ProfileActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
-                for (JSONObject j : msgJson){
-                    toString(j);
-                }
             }
         }
     }
 
-    void toString(JSONObject json) {
-        System.out.println("\nJSONObject to String\n.");
-        try {
-            System.out.println("\nSender " + json.get("Sender"));
-            System.out.println("\nRecipient " + json.get("Recipient"));
-            System.out.println("\nData " + json.get("Data"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    JSONObject toJ(String s) {
+    JSONObject toJson(String s) {
         try {
             return new JSONObject(s);
         } catch (JSONException e) {
